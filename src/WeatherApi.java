@@ -15,6 +15,9 @@ public class WeatherApi {
 
     private String name;
     private String temp_c;
+
+
+    private String icon;
     private int error;
 
     public void getWeather() {
@@ -38,16 +41,18 @@ public class WeatherApi {
 
             final JsonParser parser = new JsonParser();
             final JsonObject root = parser.parse(jsonString).getAsJsonObject();
-            error = 200;
+            error = 0;
             try {
                 name = root.getAsJsonObject("location")
                         .get("name").toString().replaceAll("\"", "");
 
                 temp_c = root.getAsJsonObject("current")
                         .get("temp_c").toString() + " °c";
+                icon = root.getAsJsonObject("current")
+                        .getAsJsonObject("condition")
+                        .get("icon").toString().replaceAll("\"", "");
             } catch (NullPointerException e1) {
-                error = root.getAsJsonObject("error")
-                        .get("code").getAsInt();
+                error = 1;
             }
             System.out.println(getResponse.body());
             System.out.println(jsonString);
@@ -81,5 +86,9 @@ public class WeatherApi {
 
     public int getError() {
         return error;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }
