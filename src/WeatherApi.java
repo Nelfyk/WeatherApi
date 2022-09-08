@@ -1,12 +1,10 @@
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WeatherApi {
     public static void main(String[] args) {
@@ -22,8 +20,23 @@ public class WeatherApi {
                     .build();
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpResponse<String> getResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(getResponse);
-            System.out.println(getResponse.body());
+
+            //System.out.println(getResponse);
+
+            final String jsonString = getResponse.body(); // Здесь Json в виде строки
+
+            final JsonParser parser = new JsonParser();
+            final JsonObject root = parser.parse(jsonString).getAsJsonObject();
+
+            final String name = root.getAsJsonObject("location")
+                    .get("name").toString().replaceAll("\"","");
+
+            final String temp_c = root.getAsJsonObject("current")
+                            .get("temp_c").toString();
+
+            System.out.println(jsonString);
+            System.out.println("\n"+name);
+            System.out.println(temp_c+"°C");
         } catch (Exception e) {
             e.printStackTrace();
         }
