@@ -23,6 +23,10 @@ public class WeatherApi {
 
             //System.out.println(getResponse);
 
+
+            /*------------------------------------------------------------------------
+                                        P A R S I N G
+            ------------------------------------------------------------------------*/
             final String jsonString = getResponse.body(); // Здесь Json в виде строки
 
             final JsonParser parser = new JsonParser();
